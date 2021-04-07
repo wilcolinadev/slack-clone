@@ -7,18 +7,57 @@ const Register = () => {
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [error, setError] = useState(false);
+
+
+
+    const formValidation = () => {
+
+        if (userName.length > 0 || userEmail.length > 0) {
+            return true;
+        } else {
+
+        }
+    };
+
+    const passwordValidation = () => {
+
+        if ((passwordConfirmation === userPassword) && (userPassword.length >= 6)) {
+            return true;
+        } else {
+
+        }
+    };
+
+
+    let errorMessage = null;
+    if (error) {
+        errorMessage = <Message error>
+            <h3> Please fill out the Form Correctly  </h3>
+        </Message>
+    }
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        firebase.auth().
-            createUserWithEmailAndPassword(userEmail, userPassword).
-            then(
-                createdUser => {
-                    console.log(createdUser);
-                }
-            ).catch(err => {
-                console.log(err);
-            })
+
+
+        if (passwordValidation() && formValidation()) {
+
+            event.preventDefault();
+            firebase.auth().
+                createUserWithEmailAndPassword(userEmail, userPassword).
+                then(
+                    createdUser => {
+                        console.log(createdUser);
+                    }
+                ).catch(err => {
+                    console.log(err);
+                })
+        } else {
+            setError(true);
+            console.log('Form Error');
+        }
+
+
     };
     return (
         <Grid textAlign="center" verticalAlign="middle" className="app">
@@ -79,7 +118,7 @@ const Register = () => {
                     </Segment>
 
                 </Form>
-
+                {errorMessage}
                 <Message>
                     Already a user? <Link to="/login">  Login </Link>
 
