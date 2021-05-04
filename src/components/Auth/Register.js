@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Grid, Form, Segment, Button, Header, Message, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import firebase from "../../Firebase/firebase";
+import md5 from 'md5';
 
 const Register = () => {
     const [userName, setUserName] = useState('');
@@ -11,7 +12,7 @@ const Register = () => {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorType, setErrorType] = useState([]);
-
+    const [usersRef, setUserRef] = useState(firebase.database().ref("users"));
 
     const formValidation = () => {
 
@@ -35,6 +36,12 @@ const Register = () => {
 
         }
     };
+    const saveUser = (createdUser) => {
+        return usersRef.child(createdUser.user.uid).set({
+            name: createdUser.user.displayName,
+            avatar: createdUser.user.photoURL
+        });
+    };
 
 
     let formError = null;
@@ -53,43 +60,57 @@ const Register = () => {
     const handleInputError = (errors, inputName) => {
         return errors.some(error => error.toLowerCase().includes(inputName)) ? 'error' : ' '
     };
-
-    const handleSubmit = (event) => {
-
+    //
+    const handleSubmit = event => {
         event.preventDefault();
         if (passwordValidation() && formValidation()) {
-
+            setErrorType([]);
             setLoading(true);
-            firebase.auth().
-                createUserWithEmailAndPassword(userEmail, userPassword).
-                then(
-                    createdUser => {
-                        console.log(createdUser);
-                        setLoading(false);
-                    }
-                ).catch(err => {
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(userEmail, userPassword)
+                .then(createdUser => {
+                    console.log(createdUser);
+                    createdUser.user
+                        .updateProfile({
+                            displayName: userName,
+                            photoURL: `http://gravatar.com/avatar/${md5(
+                                createdUser.user.email
+                            )}?d=identicon`
+                        })
+                        .then(() => {
+                            saveUser(createdUser).then(() => {
+                                console.log("user saved");
+                                setLoading(false);
+                            });
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            setError(true)
+                            setErrorType([...errorType, err.message]);
+                            setLoading(false);
+                        });
+                })
+                .catch(err => {
                     console.log(err);
                     setError(true)
                     setErrorType([...errorType, err.message]);
                     setLoading(false);
-
-
-
-
-
-                })
+                });
         } else {
             setError(true);
             console.log('Form Error');
 
         }
-
-
     };
+
+    //
+
+
     return (
         <Grid textAlign="center" verticalAlign="middle" className="app">
             <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as="h2" icon color="orange" textAlign="center" >
+                <Header as="h1" icon color="orange" textAlign="center" >
                     <Icon name="puzzle piece" color="orange" />
                     Register For DevChat
                 </Header>
