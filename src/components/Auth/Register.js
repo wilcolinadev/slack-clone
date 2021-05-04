@@ -2,21 +2,25 @@ import React, { useState } from "react";
 import { Grid, Form, Segment, Button, Header, Message, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import firebase from "../../Firebase/firebase";
+
 const Register = () => {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [error, setError] = useState(false);
-
+    const [loading, setLoading] = useState(false);
+    const [errorType, setErrorType] = useState([]);
 
 
     const formValidation = () => {
 
         if (userName.length > 0 || userEmail.length > 0) {
             return true;
-        } else {
+            setErrorType([]);
 
+        } else {
+            setErrorType([...errorType, 'Make sure to fill your email and name '])
         }
     };
 
@@ -24,37 +28,60 @@ const Register = () => {
 
         if ((passwordConfirmation === userPassword) && (userPassword.length >= 6)) {
             return true;
+            setErrorType([]);
+
         } else {
+            setErrorType([...errorType, 'Password Invalid']);
 
         }
     };
 
 
-    let errorMessage = null;
+    let formError = null;
+
     if (error) {
-        errorMessage = <Message error>
-            <h3> Please fill out the Form Correctly  </h3>
+        formError = <Message error>
+            <h3> Error  </h3>
+
+            {errorType.map((el, index) => (
+                <p key={index}> {el} </p>
+            ))}
         </Message>
+
     }
+
+    const handleInputError = (errors, inputName) => {
+        return errors.some(error => error.toLowerCase().includes(inputName)) ? 'error' : ' '
+    };
 
     const handleSubmit = (event) => {
 
-
+        event.preventDefault();
         if (passwordValidation() && formValidation()) {
 
-            event.preventDefault();
+            setLoading(true);
             firebase.auth().
                 createUserWithEmailAndPassword(userEmail, userPassword).
                 then(
                     createdUser => {
                         console.log(createdUser);
+                        setLoading(false);
                     }
                 ).catch(err => {
                     console.log(err);
+                    setError(true)
+                    setErrorType([...errorType, err.message]);
+                    setLoading(false);
+
+
+
+
+
                 })
         } else {
             setError(true);
             console.log('Form Error');
+
         }
 
 
@@ -78,6 +105,7 @@ const Register = () => {
                             onChange={(event) => setUserName(event.target.value)}
                             type="text"
                             value={userName}
+                            className={handleInputError(errorType, "username")}
                         />
 
                         <Form.Input fluid name="email"
@@ -87,6 +115,7 @@ const Register = () => {
                             onChange={(event) => setUserEmail(event.target.value)}
                             type="email"
                             value={userEmail}
+                            className={handleInputError(errorType, "email")}
                         />
 
                         <Form.Input
@@ -97,6 +126,7 @@ const Register = () => {
                             onChange={(event) => setUserPassword(event.target.value)}
                             type="password"
                             value={userPassword}
+                            className={handleInputError(errorType, "password")}
                         />
 
                         <Form.Input
@@ -107,18 +137,24 @@ const Register = () => {
                             onChange={(event) => setPasswordConfirmation(event.target.value)}
                             type="password"
                             value={passwordConfirmation}
+                            className={handleInputError(errorType, "password")}
                         />
 
-                        <Button
+                        <Button className={loading ? 'loading' : ''}
                             color="orange"
-                            fluid size="large">
+                            fluid size="large"
+                            disabled={loading}
+                        >
                             Submit
                         </Button>
 
                     </Segment>
 
                 </Form>
-                {errorMessage}
+                {formError}
+
+
+
                 <Message>
                     Already a user? <Link to="/login">  Login </Link>
 
