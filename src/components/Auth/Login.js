@@ -115,7 +115,7 @@ const Login = () => {
 
 
                 <Message>
-                    Need to Register? <Link to="/register">  Login </Link>
+                    Need to Register? <Link to="/register">  Register </Link>
 
                 </Message>
 
