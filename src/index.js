@@ -25,12 +25,12 @@ const Root = (props) => {
         console.log(user);
         props.setUser(user);
         props.history.push("/");
-      }else{
+      } else {
         props.history.push('/login');
         props.clearUser();
       }
     })
-  }, [props.history])
+  }, [props.clearUser, props.setUser, props.history])
 
   return props.isLoading ? <Spinner /> : (
 

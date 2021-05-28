@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import React, { useState } from "react";
 import firebase from "../Firebase/firebase";
 import { Grid, Header, Icon, Dropdown, Image } from "semantic-ui-react";
 const UsersPanel = (props) => {
