@@ -17,20 +17,20 @@ import Spinner from "./Spinner";
 const store = createStore(rootReducer, composeWithDevTools());
 
 const Root = (props) => {
-
+  const { clearUser, setUser, history } = props;
   useEffect(() => {
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         console.log(user);
-        props.setUser(user);
-        props.history.push("/");
+        setUser(user);
+        history.push("/");
       } else {
-        props.history.push('/login');
-        props.clearUser();
+        history.push('/login');
+        clearUser();
       }
     })
-  }, [props.clearUser, props.setUser, props.history])
+  }, [clearUser, setUser, history])
 
   return props.isLoading ? <Spinner /> : (
 

@@ -67,6 +67,7 @@ const MessageForm = (props) => {
                     labelPosition="left"
                     icon="edit"
                     onClick={sendMessage}
+                    disabled={Isloading}
                 />
                 <Button
                     color="teal"

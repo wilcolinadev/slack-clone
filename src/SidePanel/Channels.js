@@ -1,176 +1,173 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import firebase from "../Firebase/firebase";
 import { connect } from "react-redux";
 import { setCurrentChannel } from "../actions/index";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
-const Channels = (props) => {
-
-    const [channels, setChannels] = useState([]);
-    const [IsModalOpen, setIsModalOpen] = useState(false);
-    const [channelName, setChannelName] = useState("");
-    const [channelDetails, setChannelDetails] = useState("");
-    const [channelRef, setChannelRef] = useState(firebase.database().ref('channels'));
-    const [userName, setUserName] = useState(props.currentUser)
-    const [isFirstLoad, setIsFirstLoad] = useState(true);
-    const [activeChannel, IsActiveChannel] = useState('')
 
 
-    //const setFirstChannel = useCallback(() => {
+class Channels extends React.Component {
+    state = {
+        activeChannel: "",
+        user: this.props.currentUser,
+        channels: [],
+        channelName: "",
+        channelDetails: "",
+        channelsRef: firebase.database().ref("channels"),
+        modal: false,
+        firstLoad: true
+    };
 
-    //const firstChannel = channels[0];
-    //if (isFirstLoad && channels.length > 0) {
-    //  props.setCurrentChannel(firstChannel);
-    // IsActiveChannel(firstChannel);
-    //}
-    // setIsFirstLoad(false);
-    // }, [isFirstLoad, channels, props.setCurrentChannel])
+    componentDidMount() {
+        this.addListeners();
+    }
 
-    const addListeners = useCallback(() => {
+    componentWillUnmount() {
+        this.removeListeners();
+    }
+
+    addListeners = () => {
         let loadedChannels = [];
-        channelRef.on('child_added', snap => {
+        this.state.channelsRef.on("child_added", snap => {
             loadedChannels.push(snap.val());
-            setChannels(loadedChannels);
+            this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
+        });
+    };
 
-        })
-    }, [channelRef])
+    removeListeners = () => {
+        this.state.channelsRef.off();
+    };
 
-    useEffect(() => {
-        addListeners();
-
-        return function removeEventListener() {
-            //channelRef.off();
-
+    setFirstChannel = () => {
+        const firstChannel = this.state.channels[0];
+        if (this.state.firstLoad && this.state.channels.length > 0) {
+            this.props.setCurrentChannel(firstChannel);
+            this.setActiveChannel(firstChannel);
         }
-    }, [addListeners]);
-
-
-
-    const setActiveChannel = (channel) => {
-        IsActiveChannel(channel.id)
-    }
-
-
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-    const closeModal = () => {
-        setIsModalOpen(false);
+        this.setState({ firstLoad: false });
     };
 
-    const changeChannel = channel => {
-        IsActiveChannel(channel.id);
-        props.setCurrentChannel(channel);
-    }
+    addChannel = () => {
+        const { channelsRef, channelName, channelDetails, user } = this.state;
 
-    const addChannel = () => {
-        const key = channelRef.push().key;
+        const key = channelsRef.push().key;
 
         const newChannel = {
             id: key,
             name: channelName,
             details: channelDetails,
             createdBy: {
-                userName: userName.displayName,
-                avatar: userName.photoURL
+                name: user.displayName,
+                avatar: user.photoURL
             }
         };
-        
-        channelRef
+
+        channelsRef
             .child(key)
             .update(newChannel)
             .then(() => {
-                setChannelName('');
-                setChannelDetails('');
-                closeModal();
-                console.log("Channel Added");
+                this.setState({ channelName: "", channelDetails: "" });
+                this.closeModal();
+                console.log("channel added");
             })
-            .catch((err) => {
-                console.log(err);
-            })
+            .catch(err => {
+                console.error(err);
+            });
     };
 
-    const displayChannels = (channels) => (
+    handleSubmit = event => {
+        event.preventDefault();
+        if (this.isFormValid(this.state)) {
+            this.addChannel();
+        }
+    };
 
-        channels.length > 0 && channels.map(channel => (
+
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value });
+    };
+
+    changeChannel = channel => {
+        this.setActiveChannel(channel);
+        this.props.setCurrentChannel(channel);
+    };
+
+    setActiveChannel = channel => {
+        this.setState({ activeChannel: channel.id });
+    };
+
+    displayChannels = channels =>
+        channels.length > 0 &&
+        channels.map(channel => (
             <Menu.Item
-
                 key={channel.id}
-                onClick={() => changeChannel(channel)}
+                onClick={() => this.changeChannel(channel)}
                 name={channel.name}
                 style={{ opacity: 0.7 }}
-                active={channel.id === activeChannel}
+                active={channel.id === this.state.activeChannel}
             >
-                #{channel.name}
+                # {channel.name}
             </Menu.Item>
-        ))
+        ));
 
-    )
+    isFormValid = ({ channelName, channelDetails }) =>
+        channelName && channelDetails;
 
+    openModal = () => this.setState({ modal: true });
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        if (channelName && channelDetails) {
-            addChannel();
-        }
-
-    }
+    closeModal = () => this.setState({ modal: false });
 
 
-    return (
-        <>
-            <Menu.Menu style={{ paddingBottom: '2em' }} >
+    render() {
+        const { channels, modal } = this.state;
+        return (<>
+            <Menu.Menu style={{ paddingBottom: "2em" }}>
                 <Menu.Item>
                     <span>
-                        <Icon name={"exchange"} /> Channels
-                </span>{" "}
-                ({channels.length}) <Icon name="add" onClick={openModal} />
+                        <Icon name="exchange" /> CHANNELS
+            </span>{" "}
+            ({channels.length}) <Icon name="add" onClick={this.openModal} />
                 </Menu.Item>
-                {displayChannels(channels)}
+                {this.displayChannels(channels)}
             </Menu.Menu>
 
-            <Modal basic open={IsModalOpen} onClose={closeModal}>
-                <Modal.Header>
-                    Add a Channel
-            </Modal.Header>
-
+            {/* Add Channel Modal */}
+            <Modal basic open={modal} onClose={this.closeModal}>
+                <Modal.Header>Add a Channel</Modal.Header>
                 <Modal.Content>
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={this.handleSubmit}>
                         <Form.Field>
                             <Input
                                 fluid
-                                label={"Name of Channel"}
-                                name={"ChannelName"}
-                                onChange={(event) => setChannelName(event.target.value)}
+                                label="Name of Channel"
+                                name="channelName"
+                                onChange={this.handleChange}
                             />
-
                         </Form.Field>
 
                         <Form.Field>
                             <Input
                                 fluid
-                                label={"Describe the channel"}
-                                name={"ChannelDetails"}
-                                onChange={(event) => setChannelDetails(event.target.value)}
+                                label="About the Channel"
+                                name="channelDetails"
+                                onChange={this.handleChange}
                             />
-
                         </Form.Field>
-
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <Button color="green" inverted onClick={handleSubmit}>
+                    <Button color="green" inverted onClick={this.handleSubmit}>
                         <Icon name="checkmark" /> Add
-                </Button>
-                    <Button color="red" inverted onClick={closeModal}>
+            </Button>
+                    <Button color="red" inverted onClick={this.closeModal}>
                         <Icon name="remove" /> Cancel
-                </Button>
+            </Button>
                 </Modal.Actions>
             </Modal>
         </>
-    )
-};
+        )
+    }
+}
 
 
 export default connect(null, { setCurrentChannel })(Channels);
