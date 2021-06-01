@@ -74,7 +74,7 @@ const Channels = (props) => {
                 avatar: userName.photoURL
             }
         };
-
+        
         channelRef
             .child(key)
             .update(newChannel)
