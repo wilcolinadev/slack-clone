@@ -22,3 +22,8 @@ padding: 1em;
     border-left: 2px solid rgb(224, 106, 8);
     padding-left: 8px; 
 }
+
+.message__images{
+    padding: 1em;
+
+}

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Segment, Button, Input } from "semantic-ui-react";
 import firebase from "../Firebase/firebase";
 import FileModal from "./FileModal";
+import { uuid } from "uuidv4";
+import { v4 } from "uuid";
+
 const MessageForm = (props) => {
 
     const [message, setMessage] = useState('');
@@ -10,15 +13,19 @@ const MessageForm = (props) => {
     const [user, seUser] = useState(props.currentUser);
     const [errors, setErrors] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [IsUpload, setIsUpload] = useState("");
+    const [IsUploadTask, setIsUploadTask] = useState(null);
+    const [storageRef, setStorageRef] = useState(firebase.storage().ref())
+    const [percentUpLoaded, setPercentUploaded] = useState(0);
+
 
     const openModal = () => (setIsModalOpen(true));
 
     const closeModal = () => (setIsModalOpen(false));
 
-    const createMessage = () => {
+    const createMessage = (fileUrl = null) => {
 
         const messageDetails = {
-            content: message,
             timeStamp: firebase.database.ServerValue.TIMESTAMP,
             user: {
                 id: user.uid,
@@ -26,6 +33,12 @@ const MessageForm = (props) => {
                 avatar: user.photoURL,
 
             }
+
+        }
+        if (fileUrl !== null) {
+            messageDetails['image'] = fileUrl;
+        } else {
+            messageDetails['content'] = message;
         }
         return messageDetails;
     }
@@ -54,10 +67,58 @@ const MessageForm = (props) => {
         }
     };
 
-     const uploadFile = (file, metadata) =>{
-         console.log(file, metadata);
+    useEffect(() => {
 
-     }   
+        if (IsUploadTask !== null) {
+            const pathToUpLoad = channel.id;
+            const ref = props.messagesRef;
+            IsUploadTask.on('state_changed', snap => {
+                const percentupLoaded = Math.round(snap.bytesTransferred / snap.totalBytes) * 100;
+                setPercentUploaded(percentupLoaded);
+
+            }, err => {
+                console.log(err);
+                setErrors([...errors, err])
+                setIsUpload('error')
+                setIsUploadTask(null)
+            },
+                () => {
+                    IsUploadTask.snapshot.ref.getDownloadURL().then(downloadUrl => {
+                        sendFileMessage(downloadUrl, ref, pathToUpLoad);
+                    })
+                        .catch(err => {
+                            console.log(err);
+                            setErrors([...errors, err])
+                            setIsUpload('error')
+                            setIsUploadTask(null)
+                        })
+                })
+            return (
+                window.removeEventListener("state_changed", IsUploadTask.off)
+            )
+        }
+
+    }, [IsUploadTask])
+
+    const uploadFile = (file, metadata) => {
+
+        const filePath = `chat/public/${v4()}.jpg`;
+        setIsUpload('uploading');
+        setIsUploadTask(storageRef.child(filePath).put(file, metadata));
+    }
+
+    const sendFileMessage = (url, ref, path) => {
+        ref.child(path)
+            .push()
+            .set(createMessage(url))
+            .then(() => {
+                setIsUpload('done')
+            })
+            .catch(err => {
+                console.log(err)
+                setErrors([...errors, err])
+            })
+    }
     return (
         <Segment className="message__form">
             <Input
@@ -69,7 +130,7 @@ const MessageForm = (props) => {
                 placeholder="Write Your Message"
                 value={message}
                 onChange={(event) => (setMessage(event.target.value))}
-                className={errors.some(error => error.includes('message')) ? 'error' : ''}
+
             />
             <Button.Group icon widths="2">
                 <Button
