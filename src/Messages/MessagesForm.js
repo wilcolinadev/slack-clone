@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Segment, Button, Input } from "semantic-ui-react";
 import firebase from "../Firebase/firebase";
 import FileModal from "./FileModal";
-import { uuid } from "uuidv4";
 import { v4 } from "uuid";
+import ProgressBar from "./ProgressBar";
+
 
 const MessageForm = (props) => {
 
@@ -70,6 +71,7 @@ const MessageForm = (props) => {
     useEffect(() => {
 
         if (IsUploadTask !== null) {
+            console.log("use effect")
             const pathToUpLoad = channel.id;
             const ref = props.messagesRef;
             IsUploadTask.on('state_changed', snap => {
@@ -120,7 +122,7 @@ const MessageForm = (props) => {
             })
     }
     return (
-        <Segment className="message__form">
+        <Segment className="message__Form">
             <Input
                 fluid
                 name="message"
@@ -155,6 +157,9 @@ const MessageForm = (props) => {
                 />
 
             </Button.Group>
+            <ProgressBar
+                percentUpLoaded={percentUpLoaded}
+                IsUpload={IsUpload} />
         </Segment>
     )
 };
