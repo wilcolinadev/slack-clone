@@ -154,6 +154,7 @@ const MessageForm = (props) => {
                     modal={isModalOpen}
                     closeModal={closeModal}
                     uploadFile={uploadFile}
+                    disabled={IsUpload === "uploading"} 
                 />
 
             </Button.Group>
