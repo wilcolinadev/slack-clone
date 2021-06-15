@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Menu, Icon } from "semantic-ui-react";
 import UsersPanel from "./UserPanel";
@@ -51,10 +50,17 @@ class DirectMessages extends React.Component {
             }
         })
     }
+    
+    removeListeners= () =>{
+        this.state.presenceRef.off()
+        this.state.connectedRef.off()
+        this.state.usersRef.off()
 
+
+    }
     addStatusToUser = (userID, connected = true) => {
         const updatedUsers = this.state.users.reduce((acc, user) => {
-            if (user.uid == userID) {
+            if (user.uid === userID) {
                 user['status'] = `${connected ? 'online' : 'offline'}`;
             }
             return acc.concat(user)
@@ -65,6 +71,9 @@ class DirectMessages extends React.Component {
         if (this.state.user) {
             this.addListeners(this.state.user.uid);
         }
+    }
+    componentWillUnmount() {
+        this.removeListeners();
     }
 
     isUserOnline = (user) => user.status === 'online';
