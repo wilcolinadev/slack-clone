@@ -48,7 +48,7 @@ const MessageForm = (props) => {
 
         if (message) {
             setIsLoading(true);
-            props.messagesRef
+            props.getMessagesRef()
                 .child(channel.id)
                 .push()
                 .set(createMessage())
@@ -102,9 +102,16 @@ const MessageForm = (props) => {
 
     }, [IsUploadTask])
 
-    const uploadFile = (file, metadata) => {
+    const getPath = () => {
+        if (props.IsPrivateChannel) {
+            return `chat/private/-${channel.id}`;
+        } else {
+            return 'chat/public'
+        }
+    }
 
-        const filePath = `chat/public/${v4()}.jpg`;
+    const uploadFile = (file, metadata) => {
+        const filePath = `${getPath()}/${v4()}.jpg`;
         setIsUpload('uploading');
         setIsUploadTask(storageRef.child(filePath).put(file, metadata));
     }
@@ -154,7 +161,7 @@ const MessageForm = (props) => {
                     modal={isModalOpen}
                     closeModal={closeModal}
                     uploadFile={uploadFile}
-                    disabled={IsUpload === "uploading"} 
+                    disabled={IsUpload === "uploading"}
                 />
 
             </Button.Group>

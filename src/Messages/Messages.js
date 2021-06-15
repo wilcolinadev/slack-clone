@@ -18,7 +18,10 @@ class Messages extends React.Component {
         numUniqueUsers: 0,
         searchTerm: '',
         searchLoading: false,
-        searchResults: []
+        searchResults: [],
+        privateChannel: this.props.isPrivateChannel,
+        privateMessagesRef: firebase.database().ref("privateMessages"),
+        currentRef: firebase.database().ref("messages")
     };
 
     componentDidMount() {
@@ -57,20 +60,21 @@ class Messages extends React.Component {
         const channelMessages = [...this.state.messages];
         const regex = new RegExp(this.state.searchTerm, 'gi');
         const searchResults = channelMessages.reduce((acc, message) => {
-            if (message.content && message.content.match(regex) || message.user.name.match(regex) ) {
+            if (message.content && message.content.match(regex) || message.user.name.match(regex)) {
                 acc.push(message);
             }
             return acc
         }, [])
 
-        this.setState({ searchResults});
-       setTimeout(() =>this.setState({ searchLoading: false }),1000 ) 
+        this.setState({ searchResults });
+        setTimeout(() => this.setState({ searchLoading: false }), 1000)
 
     }
 
     addMessageListener = channelId => {
         let loadedMessages = [];
-        this.state.messagesRef.child(channelId).on("child_added", snap => {
+        const ref = this.state.currentRef;
+        ref.child(channelId).on("child_added", snap => {
             loadedMessages.push(snap.val());
             this.setState({
                 messages: loadedMessages,
@@ -90,15 +94,24 @@ class Messages extends React.Component {
             />
         ));
 
-    displayChannelName = channel => channel ? `#${channel.name}` : ' '
+    displayChannelName = channel => {
+        return channel ? `${this.state.privateChannel ? '@' : '#'} ${channel.name}` : ' ';
+
+
+    }
 
     isProgressBarVisible = (percent) => {
         if (percent > 0) {
             this.setState({ progressBar: true });
         }
     }
+
+    getMessagesRef = () => {
+        const { messagesRef, privateChannel, privateMessagesRef } = this.state;
+        privateChannel ? this.setState({ currentRef: privateMessagesRef }) : this.setState({ messagesRef });
+    }
     render() {
-        const { messagesRef, messages, channel, user, progressBar, searchTerm, searchResults, numUniqueUsers, searchLoading } = this.state;
+        const { messagesRef, messages, channel, user, progressBar, searchTerm, searchResults, numUniqueUsers, searchLoading, privateChannel, currentRef } = this.state;
 
         return (
             <React.Fragment>
@@ -107,6 +120,7 @@ class Messages extends React.Component {
                     channelUsers={numUniqueUsers}
                     handleSearchChange={this.handleSearchChange}
                     searchLoading={searchLoading}
+                    IsPrivateChannel={privateChannel}
                 />
 
                 <Segment>
@@ -120,6 +134,8 @@ class Messages extends React.Component {
                     currentChannel={channel}
                     currentUser={user}
                     isProgressBarVisible={this.isProgressBarVisible}
+                    IsPrivateChannel={privateChannel}
+                    currentRef={currentRef}
                 />
             </React.Fragment>
         );

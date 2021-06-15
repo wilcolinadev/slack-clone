@@ -1,7 +1,7 @@
 import React from "react";
 import firebase from "../Firebase/firebase";
 import { connect } from "react-redux";
-import { setCurrentChannel } from "../actions/index";
+import { setCurrentChannel, setPrivateChannel } from "../actions/index";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 
 
@@ -89,10 +89,12 @@ class Channels extends React.Component {
     changeChannel = channel => {
         this.setActiveChannel(channel);
         this.props.setCurrentChannel(channel);
+        setPrivateChannel(false);
     };
 
     setActiveChannel = channel => {
         this.setState({ activeChannel: channel.id });
+
     };
 
     displayChannels = channels =>
@@ -124,8 +126,8 @@ class Channels extends React.Component {
                 <Menu.Item>
                     <span>
                         <Icon name="exchange" /> CHANNELS
-            </span>{" "}
-            ({channels.length}) <Icon name="add" onClick={this.openModal} />
+                    </span>{" "}
+                    ({channels.length}) <Icon name="add" onClick={this.openModal} />
                 </Menu.Item>
                 {this.displayChannels(channels)}
             </Menu.Menu>
@@ -158,10 +160,10 @@ class Channels extends React.Component {
                 <Modal.Actions>
                     <Button color="green" inverted onClick={this.handleSubmit}>
                         <Icon name="checkmark" /> Add
-            </Button>
+                    </Button>
                     <Button color="red" inverted onClick={this.closeModal}>
                         <Icon name="remove" /> Cancel
-            </Button>
+                    </Button>
                 </Modal.Actions>
             </Modal>
         </>
@@ -170,4 +172,4 @@ class Channels extends React.Component {
 }
 
 
-export default connect(null, { setCurrentChannel })(Channels);
+export default connect(null, { setCurrentChannel, setPrivateChannel })(Channels);
