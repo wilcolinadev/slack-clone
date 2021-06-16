@@ -48,7 +48,7 @@ const MessageForm = (props) => {
 
         if (message) {
             setIsLoading(true);
-            props.getMessagesRef()
+            props.currentRef
                 .child(channel.id)
                 .push()
                 .set(createMessage())
