@@ -1,6 +1,6 @@
 import React from "react";
 import { Header, Segment, Input, Icon } from "semantic-ui-react";
-const MessagesHeader = ({ channelName, channelUsers, handleSearchChange, searchLoading, IsPrivateChannel }) => {
+const MessagesHeader = ({ channelName, channelUsers, handleSearchChange, searchLoading, IsPrivateChannel, handleStar, isChannelStarred }) => {
     let usersDescription = "users";
 
     if (channelUsers < 2) {
@@ -14,7 +14,12 @@ const MessagesHeader = ({ channelName, channelUsers, handleSearchChange, searchL
                 <Header fluid="true" as="h2" floated="left" style={{ marginBottom: "0" }}>
                     <span>
                         {channelName}
-                       {!IsPrivateChannel && <Icon name="star outline" color="black" />}
+                        {!IsPrivateChannel &&
+                            (
+                                <Icon name={isChannelStarred ? 'star' : 'star outline'}
+                                    color={isChannelStarred ? 'yellow' : 'black'}
+                                    onClick={handleStar} />)
+                        }
                     </span>
                     <Header.Subheader> {channelUsers} {usersDescription} </Header.Subheader>
                 </Header>
@@ -23,7 +28,7 @@ const MessagesHeader = ({ channelName, channelUsers, handleSearchChange, searchL
 
                     <Input
                         loading={searchLoading}
-                        onChange ={handleSearchChange}   
+                        onChange={handleSearchChange}
                         size="mini"
                         icon="search"
                         name="searchTerm"
