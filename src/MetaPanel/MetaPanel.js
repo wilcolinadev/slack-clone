@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Segment, Accordion, Header, Icon } from "semantic-ui-react";
+import { Segment, Accordion, Header, Icon, Image, List } from "semantic-ui-react";
 const MetaPanel = (props) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [privateChannel, setPrivateChannel] = useState(props.isPrivateChannel)
+    const [channel, setCurrentChannel] = useState(props.currentChannel);
+    const [user, setCurrentUser] = useState(props.currentUser);
+    const [userPosts, setUserPosts] = useState(props.userPosts);
     const defineActiveIndex = (event, tittleProps) => {
         const { index } = tittleProps;
         const newActiveIndex = activeIndex;
@@ -12,11 +15,15 @@ const MetaPanel = (props) => {
         setActiveIndex(newIndex);
     }
 
+
+
+
+
     if (privateChannel) return null
     return (
-        <Segment>
+        <Segment loading={!channel}>
             <Header as={"h3"} attached={"top"}>
-                About # channel
+                {channel && channel.name}
             </Header>
             <Accordion styled attached="true">
                 <Accordion.Title
@@ -28,20 +35,9 @@ const MetaPanel = (props) => {
                     Channel Details
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 0}>
-                    details
+                    {channel && channel.details}
                 </Accordion.Content>
 
-                <Accordion.Title
-                    active={activeIndex === 1}
-                    index={1}
-                    onClick={defineActiveIndex}>
-                    <Icon name="dropdown" />
-                    <Icon name="user circle" />
-                    Channel Details
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === 1}>
-                    posters
-                </Accordion.Content>
 
                 <Accordion.Title
                     active={activeIndex === 2}
@@ -52,7 +48,13 @@ const MetaPanel = (props) => {
                     Created By
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 2}>
-                    creator
+                    <Header as="h4">
+                        <Image src={channel && channel.createdBy.avatar}
+                            circular />
+                        {channel && channel.createdBy.name}
+                    </Header>
+
+
                 </Accordion.Content>
 
 

@@ -35,17 +35,17 @@ class Messages extends React.Component {
         }
     }
 
-    addUserStartsListeners = (channelId, userId) =>{
+    addUserStartsListeners = (channelId, userId) => {
 
         this.state.usersRef
             .child(userId)
             .child('starred')
             .once('value')
-            .then(data=>{
-                if (data.val() !== null){
+            .then(data => {
+                if (data.val() !== null) {
                     const channelIds = Object.keys(data.val())
                     const prevStarred = channelIds.includes(channelId);
-                    this.setState({isChannelStarred:prevStarred})
+                    this.setState({ isChannelStarred: prevStarred })
                 }
             })
     }
@@ -99,8 +99,10 @@ class Messages extends React.Component {
                 messagesLoading: false
             });
             this.countUniqueUsers(loadedMessages);
+
         });
     };
+
 
     displayMessages = messages =>
         messages.length > 0 &&
@@ -114,9 +116,9 @@ class Messages extends React.Component {
 
     displayChannelName = channel => {
         return channel ? `${this.state.privateChannel ? '@' : '#'} ${channel.name}` : ' ';
-
-
     }
+
+
 
     isProgressBarVisible = (percent) => {
         if (percent > 0) {

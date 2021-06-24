@@ -10,7 +10,7 @@ const App = ({ currentUser, currentChannel, isPrivateChannel }) => {
 
     return (
         <Grid columns="equal" className="app" style={{ background: "eee" }}>
-            <ColorPanel />
+            <ColorPanel currentUser={currentUser} key={ currentUser && currentUser.name} />
             <SidePanel
                 key={currentChannel && currentUser.uid}
                 currentUser={currentUser} />
@@ -22,11 +22,13 @@ const App = ({ currentUser, currentChannel, isPrivateChannel }) => {
                     isPrivateChannel={isPrivateChannel} />
             </Grid.Column>
             <Grid.Column width={4}>
-                <MetaPanel 
+                <MetaPanel
                     isPrivateChannel={isPrivateChannel}
-                     key={currentChannel && currentChannel.id}
-                     
-                     />
+                    key={currentChannel && currentChannel.name}
+                    currentChannel={currentChannel}
+                    currentUser={currentUser}
+
+                />
             </Grid.Column>
 
         </Grid>
