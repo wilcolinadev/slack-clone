@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import firebase from "../Firebase/firebase";
-import { Grid, Header, Icon, Dropdown, Image } from "semantic-ui-react";
+import { Grid, Header, Icon, Dropdown, Image, Modal, Input, Button } from "semantic-ui-react";
 const UsersPanel = (props) => {
 
     const [userState, setUserState] = useState({ user: props.currentUser });
+    const [isModalOpen, setModal] = useState(false)
 
+    const openModal = () => setModal(true);
+    const closeModal = () => setModal(false);
 
     const handleSignOut = () => {
         firebase
@@ -22,7 +25,7 @@ const UsersPanel = (props) => {
                 },
                 {
                     key: "avatar",
-                    text: <span>Change Avatar</span>
+                    text: <span onClick={openModal}>Change Avatar</span>
                 },
                 {
                     key: "signOut",
@@ -35,21 +38,66 @@ const UsersPanel = (props) => {
 
     return (
         <Grid style={{ background: props.primaryColor }}>
-            <Grid.Row style={{ padding: "1.2em", margin: 0 }}>
-                <Header inverted floated="left" as="h2">
-                    <Icon name="code" />
-                    <Header.Content> Developer Chat</Header.Content>
-                </Header>
-            </Grid.Row>
+            <Grid.Column>
+                <Grid.Row style={{ padding: "1.2em", margin: 0 }}>
+                    <Header inverted floated="left" as="h2">
+                        <Icon name="code" />
+                        <Header.Content> Developer Chat</Header.Content>
+                    </Header>
 
-            <Header style={{ padding: "0.25em" }} as="h4" inverted>
-                <Dropdown trigger={
-                    <span>
-                        <Image src={userState.user.photoURL} spaced="right" avatar />
-                        {userState.user.displayName}
-                    </span>
-                } options={dropdownOptions()} />
-            </Header>
+
+                    <Header style={{ padding: "0.25em" }} as="h4" inverted>
+                        <Dropdown trigger={
+                            <span>
+                                <Image src={userState.user.photoURL} spaced="right" avatar />
+                                {userState.user.displayName}
+                            </span>
+                        } options={dropdownOptions()} />
+                    </Header>
+                        <Modal basic open={isModalOpen} onClose={closeModal}> 
+                                <Modal.Header> 
+                                        Change the Avatar 
+                                </Modal.Header>
+                                
+                                <Modal.Content>
+                                        <Input 
+                                            fluid
+                                            type="file"
+                                            label="New Avatar"
+                                            name="previewImage"
+                                            />
+                                            <Grid 
+                                            centered 
+                                            stackable 
+                                            columns={2}
+                                            >
+                                                    <Grid.Row centered>
+                                                            <Grid.Column className="ui center aligned grid">
+                                                            {/*Image */}
+                                                             </Grid.Column>
+                                                            <Grid.Column >
+                                                             {/*Image */}
+                                                            </Grid.Column>
+                                                    </Grid.Row>
+                                            </Grid>
+
+                                </Modal.Content>
+                                        <Modal.Actions>
+                                            <Button color="green" inverted>
+                                                <Icon name="save" />Change Avatar
+                                            </Button>
+
+                                            <Button color="green" inverted>
+                                                <Icon name="image" />Preview
+                                            </Button>
+
+                                            <Button color="red" inverted onClick={closeModal}>
+                                                <Icon name="remove" /> Cancel
+                                            </Button>
+                                         </Modal.Actions>
+                        </Modal>
+                </Grid.Row>
+            </Grid.Column>
         </Grid>
     )
 }
