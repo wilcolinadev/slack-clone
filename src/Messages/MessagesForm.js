@@ -79,7 +79,7 @@ const MessageForm = (props) => {
                 setPercentUploaded(percentupLoaded);
 
             }, err => {
-                console.log(err);
+
                 setErrors([...errors, err])
                 setIsUpload('error')
                 setIsUploadTask(null)

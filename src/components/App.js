@@ -6,14 +6,15 @@ import Messages from "../Messages/Messages";
 import MetaPanel from "../MetaPanel/MetaPanel";
 import "./App.css";
 import { connect } from "react-redux";
-const App = ({ currentUser, currentChannel, isPrivateChannel }) => {
+const App = ({ currentUser, currentChannel, isPrivateChannel, primaryColor, secondaryColor }) => {
 
     return (
-        <Grid columns="equal" className="app" style={{ background: "eee" }}>
+        <Grid columns="equal" className="app" style={{ background: secondaryColor }}>
             <ColorPanel currentUser={currentUser} key={ currentUser && currentUser.name} />
             <SidePanel
                 key={currentChannel && currentUser.uid}
-                currentUser={currentUser} />
+                currentUser={currentUser}
+                primaryColor={primaryColor} />
             <Grid.Column style={{ marginLeft: 320 }}>
                 <Messages
                     key={currentChannel && currentChannel.id}
@@ -38,6 +39,8 @@ const App = ({ currentUser, currentChannel, isPrivateChannel }) => {
 const mapStateToProps = state => ({
     currentUser: state.user.currentUser,
     currentChannel: state.channel.currentChannel,
-    isPrivateChannel: state.channel.isPrivateChannel
+    isPrivateChannel: state.channel.isPrivateChannel,
+    primaryColor:state.colors.primaryColor,
+    secondaryColor: state.colors.secondaryColor
 })
 export default connect(mapStateToProps)(App);

@@ -42,9 +42,9 @@ class Starred extends React.Component {
             })
     }
     changeChannel = channel => {
-        this.setActiveChannel(channel.id);
-        setCurrentChannel(channel);
-        setPrivateChannel(false);
+
+        this.props.setCurrentChannel(channel);
+        this.props.setPrivateChannel(false);
     };
 
     displayChannels = channels =>
