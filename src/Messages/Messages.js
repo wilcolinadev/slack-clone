@@ -35,6 +35,23 @@ class Messages extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        const { channel, user } = this.state;
+        if (channel && user) {
+            this.removeListeners(user.uid, channel.id)
+        }
+
+    }
+
+    removeListeners = (userId, channelId) => {
+        this.state.usersRef.child(userId)
+            .child('starred')
+            .off()
+
+        this.state.currentRef.child(channelId).off()
+
+    }
+
     addUserStartsListeners = (channelId, userId) => {
 
         this.state.usersRef
@@ -78,7 +95,7 @@ class Messages extends React.Component {
         const channelMessages = [...this.state.messages];
         const regex = new RegExp(this.state.searchTerm, 'gi');
         const searchResults = channelMessages.reduce((acc, message) => {
-            if (message.content && message.content.match(regex) || message.user.name.match(regex)) {
+            if (message.content && (message.content.match(regex) || message.user.name.match(regex))) {
                 acc.push(message);
             }
             return acc
