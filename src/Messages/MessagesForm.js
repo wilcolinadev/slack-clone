@@ -17,6 +17,7 @@ const MessageForm = (props) => {
     const [IsUpload, setIsUpload] = useState("");
     const [IsUploadTask, setIsUploadTask] = useState(null);
     const [storageRef, setStorageRef] = useState(firebase.storage().ref())
+    const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'))
     const [percentUpLoaded, setPercentUploaded] = useState(0);
 
 
@@ -56,6 +57,10 @@ const MessageForm = (props) => {
                     setIsLoading(false);
                     setMessage("");
                     setErrors([]);
+                    typingRef.child(channel.id)
+                    .child(user.uid)
+                    .remove()
+                    
                 })
                 .catch(err => {
                     console.error(err);
@@ -128,9 +133,21 @@ const MessageForm = (props) => {
                 setErrors([...errors, err])
             })
     }
+    const handleKeyDown = () => {
+        if (message) {
+            typingRef.child(channel.id)
+                .child(user.uid)
+                .set(user.displayName)
+        } else {
+            typingRef.child(channel.id)
+                .child(user.uid)
+                .remove()
+        }
+    }
     return (
         <Segment className="message__Form">
             <Input
+                onKeyDown={handleKeyDown}
                 fluid
                 name="message"
                 style={{ marginBottom: "0.7em" }}
