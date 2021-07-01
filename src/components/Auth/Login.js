@@ -66,8 +66,8 @@ const Login = () => {
     return (
         <Grid textAlign="center" verticalAlign="middle" className="app">
             <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as="h1" icon color="violet" textAlign="center" >
-                    <Icon name="code branch" color="violet" />
+                <Header as="h1" icon color="black" textAlign="center" >
+                    <Icon name="comments outline" color="black" />
                     Login to DevChat
                 </Header>
                 <Form size="large" onSubmit={handleSubmit}>
@@ -100,7 +100,7 @@ const Login = () => {
 
 
                         <Button className={loading ? 'loading' : ''}
-                            color="violet"
+                            color="black"
                             fluid size="large"
                             disabled={loading}
                         >

@@ -58,9 +58,9 @@ const MessageForm = (props) => {
                     setMessage("");
                     setErrors([]);
                     typingRef.child(channel.id)
-                    .child(user.uid)
-                    .remove()
-                    
+                        .child(user.uid)
+                        .remove()
+
                 })
                 .catch(err => {
                     console.error(err);
@@ -166,19 +166,21 @@ const MessageForm = (props) => {
                     icon="edit"
                     onClick={sendMessage}
                     disabled={Isloading}
+                    style={{ background: props.primaryColor }}
                 />
                 <Button
-                    color="teal"
                     content="Upload Media"
                     labelPosition="right"
                     icon="cloud upload"
                     onClick={openModal}
+                    style={{ background: props.secondaryColor }}
                 />
                 <FileModal
                     modal={isModalOpen}
                     closeModal={closeModal}
                     uploadFile={uploadFile}
                     disabled={IsUpload === "uploading"}
+
                 />
 
             </Button.Group>

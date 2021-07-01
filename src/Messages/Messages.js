@@ -265,6 +265,8 @@ class Messages extends React.Component {
                     isProgressBarVisible={this.isProgressBarVisible}
                     IsPrivateChannel={privateChannel}
                     currentRef={currentRef}
+                    primaryColor={this.props.primaryColor}
+                    secondaryColor={this.props.secondaryColor}
                 />
             </React.Fragment>
         );

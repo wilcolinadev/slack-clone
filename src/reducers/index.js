@@ -14,8 +14,8 @@ const initialChannelState = {
 }
 
 const initialColorState = {
-    primaryColor: "#4c3c4c",
-    secondaryColor: "eee"
+    primaryColor: "#000",
+    secondaryColor: "#eee"
 }
 
 

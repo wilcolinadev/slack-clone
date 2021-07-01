@@ -89,6 +89,8 @@ const ColorPanel = (props) => {
             vertical
             visible
             width={"very thin"}
+            style={{ background: "#ABA9A9" }}
+
         >
             <Divider />
             <Button icon="add" size="small" color="blue" onClick={openModal} />
@@ -123,7 +125,7 @@ const ColorPanel = (props) => {
                 </Modal.Actions>
 
             </Modal>
-        </Sidebar>
+        </Sidebar >
     )
 }
 export default connect(null, { setColors })(ColorPanel);

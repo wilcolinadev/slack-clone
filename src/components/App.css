@@ -1,13 +1,14 @@
 html, body, .app {
 height: 100vh;
 background: #eee;
-padding: 1em;
+padding: 0.5em;
 }
 
 .messages{
     
     height: 62vh;
     overflow-y: scroll;
+    
 
 }
 

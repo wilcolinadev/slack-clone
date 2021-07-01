@@ -110,8 +110,8 @@ const Register = () => {
     return (
         <Grid textAlign="center" verticalAlign="middle" className="app">
             <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as="h1" icon color="orange" textAlign="center" >
-                    <Icon name="puzzle piece" color="orange" />
+                <Header as="h1" icon color="grey" textAlign="center" >
+                    <Icon name="comments outline" color="grey" />
                     Register For DevChat
                 </Header>
                 <Form size="large" onSubmit={handleSubmit}>
@@ -162,7 +162,7 @@ const Register = () => {
                         />
 
                         <Button className={loading ? 'loading' : ''}
-                            color="orange"
+                            color="grey"
                             fluid size="large"
                             disabled={loading}
                         >

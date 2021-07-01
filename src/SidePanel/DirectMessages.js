@@ -90,10 +90,10 @@ class DirectMessages extends React.Component {
         this.setActiveChannel(user.uid);
     }
 
-    setActiveChannel = id =>{
-        this.setState({activeChannel:id})
+    setActiveChannel = id => {
+        this.setState({ activeChannel: id })
     }
-    
+
     getChannelID = (userId) => {
         const currentUserId = this.state.user.uid;
         return userId < currentUserId ? `${userId}/${currentUserId}` : `${currentUserId}/${userId}`
@@ -114,8 +114,8 @@ class DirectMessages extends React.Component {
                     <Menu.Item
                         key={user.uid}
                         onClick={() => this.changeChannel(user)}
-                        style={{ opacity: 0.7, fontStyle: 'italic' }}
-                        active={user.uid=== activeChannel}
+                        style={{ opacity: 0.7, fontStyle: 'italic', color: "#fff" }}
+                        active={user.uid === activeChannel}
                     >
                         <Icon
                             name='circle'

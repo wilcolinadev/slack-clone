@@ -18,7 +18,7 @@ class Channels extends React.Component {
         channel: null,
         messagesRef: firebase.database().ref("messages"),
         notifications: [],
-        typingRef:firebase.database().ref('typing')
+        typingRef: firebase.database().ref('typing')
     };
 
     componentDidMount() {
@@ -131,8 +131,8 @@ class Channels extends React.Component {
         this.props.setPrivateChannel(false);
         this.setState({ channel })
         this.state.typingRef.child(this.state.channel.id)
-                                        .child(this.state.user.uid)
-                                        .remove()
+            .child(this.state.user.uid)
+            .remove()
 
     };
 
@@ -158,7 +158,7 @@ class Channels extends React.Component {
                 key={channel.id}
                 onClick={() => this.changeChannel(channel)}
                 name={channel.name}
-                style={{ opacity: 0.7 }}
+                style={{ opacity: 0.7, color: "#fff" }}
                 active={channel.id === this.state.activeChannel}
             >
                 {this.getNotificationCount(channel) && (
