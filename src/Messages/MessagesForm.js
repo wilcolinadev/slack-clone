@@ -136,7 +136,11 @@ const MessageForm = (props) => {
                 setErrors([...errors, err])
             })
     }
-    const handleKeyDown = () => {
+    const handleKeyDown = event => {
+
+        if (event.keyCode === 13) {
+            sendMessage();
+        }
         if (message) {
             typingRef.child(channel.id)
                 .child(user.uid)
