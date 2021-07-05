@@ -26,12 +26,10 @@ const ColorPanel = (props) => {
 
 
     useEffect(() => {
-
         if (userColors[0]) {
             props.setColors(userColors[0].primary, userColors[0].secondary)
 
         }
-
     }, [userColors, user])
     const addListeners = (userId) => {
         let userColors = [];

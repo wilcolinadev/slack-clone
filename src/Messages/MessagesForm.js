@@ -4,6 +4,8 @@ import firebase from "../Firebase/firebase";
 import FileModal from "./FileModal";
 import { v4 } from "uuid";
 import ProgressBar from "./ProgressBar";
+import { Picker, emojiIndex } from "emoji-mart";
+import 'emoji-mart/css/emoji-mart.css'
 
 
 const MessageForm = (props) => {
@@ -19,6 +21,7 @@ const MessageForm = (props) => {
     const [storageRef, setStorageRef] = useState(firebase.storage().ref())
     const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'))
     const [percentUpLoaded, setPercentUploaded] = useState(0);
+    const [emojiPicker, setEmojiPicker] = useState(false)
 
 
     const openModal = () => (setIsModalOpen(true));
@@ -144,14 +147,53 @@ const MessageForm = (props) => {
                 .remove()
         }
     }
+
+    const handleTooglePicker = () => {
+        setEmojiPicker(!emojiPicker)
+    }
+
+    const handleAddEmoji = (emoji) => {
+        const oldMessage = message;
+        const newMessage = colonToUnicode(`${oldMessage} ${emoji.colons}`)
+        setMessage(newMessage)
+        setEmojiPicker(false)
+
+
+
+    }
+
+    const colonToUnicode = message => {
+        return message.replace(/:[A-Za-z0-9_+-]+:/g, x => {
+            x = x.replace(/:/g, "");
+            let emoji = emojiIndex.emojis[x];
+            if (typeof emoji !== "undefined") {
+                let unicode = emoji.native;
+                if (typeof unicode !== "undefined") {
+                    return unicode;
+                }
+            }
+            x = ":" + x + ":";
+            return x;
+        });
+    };
+
     return (
         <Segment className="message__Form">
+            {emojiPicker && (
+                <Picker
+                    set="apple"
+                    className="emojiPicker"
+                    title="Pick your emoji"
+                    emoji="point_up"
+                    onSelect={handleAddEmoji}
+                />
+            )}
             <Input
                 onKeyDown={handleKeyDown}
                 fluid
                 name="message"
                 style={{ marginBottom: "0.7em" }}
-                label={<Button icon={"add"} />}
+                label={<Button icon={"add"} onClick={handleTooglePicker} content={emojiPicker ? "Close" : null} />}
                 labelPosition='left'
                 placeholder="Write Your Message"
                 value={message}
