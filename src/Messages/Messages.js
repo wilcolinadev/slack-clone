@@ -6,7 +6,7 @@ import firebase from '../Firebase/firebase';
 import Message from "./Message";
 import "../components/App.css";
 import Typing from './Typing';
-
+import Skeleton from "./Skeleton";
 class Messages extends React.Component {
     state = {
         messagesRef: firebase.database().ref("messages"),
@@ -44,6 +44,17 @@ class Messages extends React.Component {
             this.removeListeners(user.uid, channel.id)
         }
 
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+
+        if (this.messageEnd) {
+            this.scrollToBottom();
+        }
+    }
+
+    scrollToBottom = () => {
+        this.messageEnd.scrollIntoView({ behavior: 'smooth' });
     }
 
     removeListeners = (userId, channelId) => {
@@ -229,11 +240,21 @@ class Messages extends React.Component {
         ))
     )
 
+    displayMessageSkeleton = (messagesLoading) => (
+        messagesLoading ? (
+            <React.Fragment>
+                {[...Array(10)].map((_, i) => (
+                    <Skeleton key={i} />
+                ))}
+            </React.Fragment >
+        ) : null
+    )
+
 
 
     render() {
         const { messagesRef, messages, channel, user, progressBar, searchTerm, searchResults,
-            numUniqueUsers, searchLoading, privateChannel, currentRef, isChannelStarred, typingUsers } = this.state;
+            numUniqueUsers, searchLoading, privateChannel, currentRef, isChannelStarred, typingUsers, messagesLoading } = this.state;
 
         return (
             <React.Fragment>
@@ -249,12 +270,13 @@ class Messages extends React.Component {
 
                 <Segment>
                     <Comment.Group className={progressBar ? 'messages__progress' : 'messages'}>
+                        {this.displayMessageSkeleton(messagesLoading)}
                         {searchTerm ? this.displayMessages(searchResults) : this.displayMessages(messages)}
 
                         {this.displayTypingUsers(typingUsers)}
+                        <div ref={node => (this.messageEnd = node)}>
 
-
-
+                        </div>
                     </Comment.Group>
                 </Segment>
 
