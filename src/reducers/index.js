@@ -67,8 +67,6 @@ const colors_reducer = (state = initialColorState, action) => {
     }
 }
 
-
-
 const rootReducer = combineReducers({
     user: user_reducer,
     channel: channel_reducer,

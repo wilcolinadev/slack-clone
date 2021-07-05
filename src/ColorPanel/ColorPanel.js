@@ -20,10 +20,19 @@ const ColorPanel = (props) => {
         addListeners(user.uid)
         if (user && primary && secondary) {
             addListeners(user.uid)
-        }
 
+        }
     }, [primary, secondary])
 
+
+    useEffect(() => {
+
+        if (userColors[0]) {
+            props.setColors(userColors[0].primary, userColors[0].secondary)
+
+        }
+
+    }, [userColors, user])
     const addListeners = (userId) => {
         let userColors = [];
         usersRef.child(`${userId}/colors`)
@@ -38,6 +47,8 @@ const ColorPanel = (props) => {
     const handleChangeSecondary = (color) => (
         setSecondary(color.hex)
     )
+
+
 
     const displayUserColors = (colors) => (
         colors.length > 0 && (
@@ -57,6 +68,7 @@ const ColorPanel = (props) => {
                             </div>
                         </div>
                     </div>
+
                 </React.Fragment>
             ))
         )
@@ -80,6 +92,10 @@ const ColorPanel = (props) => {
             saveColors(primary, secondary)
         }
     }
+    const revertColors = (primary, secondary) => {
+        saveColors(primary, secondary)
+        props.setColors(primary, secondary)
+    }
 
     return (
         <Sidebar
@@ -94,6 +110,8 @@ const ColorPanel = (props) => {
         >
             <Divider />
             <Button icon="add" size="small" color="blue" onClick={openModal} />
+            <Divider />
+            <Button icon="redo" size="small" color="black" onClick={() => revertColors("#000", "#eee")} />
             {displayUserColors(userColors)}
             <Modal basic open={isModalOpen} onClose={closeModal} >
                 <Modal.Header>
@@ -110,6 +128,7 @@ const ColorPanel = (props) => {
                         <Label content="Secondary Color" />
                         <SliderPicker onChange={handleChangeSecondary} color={secondary} />
                     </Segment>
+
 
 
 
