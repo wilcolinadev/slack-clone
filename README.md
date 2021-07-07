@@ -12,7 +12,7 @@ This project was created using React, Firebase and semantic UI.
 
 ### Please take a look at my first big project using relevant functionalities. 
 
-##I have added interesting tools such as:
+## I have added interesting tools such as:
 
 Realtime chat with public and private channels
 
