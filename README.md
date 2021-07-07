@@ -2,7 +2,7 @@
 
 This project was created using React, Firebase and semantic UI.
 
-## Funtionalities
+## Functionalities
 
 ### *Register💻
 
@@ -10,7 +10,9 @@ This project was created using React, Firebase and semantic UI.
 
 ### *Chat
 
-### Please take a look at my first big project using relevant funtionalities. I have added interesting tools such as:
+### Please take a look at my first big project using relevant functionalities. 
+
+##I have added interesting tools such as:
 
 Realtime chat with public and private channels
 
