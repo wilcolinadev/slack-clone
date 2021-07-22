@@ -12,13 +12,13 @@ const Register = () => {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorType, setErrorType] = useState([]);
-    const [usersRef, setUserRef] = useState(firebase.database().ref("users"));
+    const [usersRef] = useState(firebase.database().ref("users"));
 
     const formValidation = () => {
 
         if (userName.length > 0 || userEmail.length > 0) {
             return true;
-            setErrorType([]);
+
 
         } else {
             setErrorType([...errorType, 'Make sure to fill your email and name '])
@@ -29,7 +29,7 @@ const Register = () => {
 
         if ((passwordConfirmation === userPassword) && (userPassword.length >= 6)) {
             return true;
-            setErrorType([]);
+
 
         } else {
             setErrorType([...errorType, 'Password Invalid']);

@@ -1,6 +1,5 @@
 import React from "react";
 import { Menu, Icon } from "semantic-ui-react";
-import UsersPanel from "./UserPanel";
 import firebase from "../Firebase/firebase";
 import { connect } from "react-redux";
 import { setCurrentChannel, setPrivateChannel } from '../actions/index';
@@ -101,7 +100,7 @@ class DirectMessages extends React.Component {
 
 
     render() {
-        const { user, users, activeChannel } = this.state;
+        const { users, activeChannel } = this.state;
         return (
             <Menu.Menu className="menu">
                 <Menu.Item>

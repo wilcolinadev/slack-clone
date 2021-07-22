@@ -10,9 +10,9 @@ const ColorPanel = (props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [primary, setPrimary] = useState('');
     const [secondary, setSecondary] = useState('')
-    const [user, setUser] = useState(props.currentUser);
+    const [user] = useState(props.currentUser);
     const [userColors, setUserColors] = useState([])
-    const [usersRef, setUsersRef] = useState(firebase.database().ref('users'))
+    const [usersRef] = useState(firebase.database().ref('users'))
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
@@ -30,6 +30,7 @@ const ColorPanel = (props) => {
             props.setColors(userColors[0].primary, userColors[0].secondary)
 
         }
+        
     }, [userColors, user])
     const addListeners = (userId) => {
         let userColors = [];

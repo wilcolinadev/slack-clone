@@ -125,7 +125,7 @@ margin: 0.3em 0 0 0 !important;
 
 }
 
-.skeleton {
+.skeleton{
     position: relative;
     overflow: hidden;
     height: 40px;
@@ -142,26 +142,25 @@ margin: 0.3em 0 0 0 !important;
     height: 100%;
     animation: sweep 2s infinite;
     background-image: linear-gradient(
-        to left,
-        transparent,
-        rgba(255,255,0.4), transparent 
+      to left,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+  }
 
-    )
-}
-
-@keyframes sweep {
-   
-    0%{
-        transform: translateX(-100%) ;
+  @keyframes sweep {
+    0% {
+      transform: translateX(-100%);
     }
-    50%{
-        transform: translateX(-150%) ;
+    50% {
+      transform: translateX(150%);
     }
-    100%{
-        transform: translateX(-100%) ;
+    100% {
+      transform: translateX(-100%);
     }
-}
-
+  }
+  
 .skeleton__avatar{
     height: 35px;
     width: 35px;
@@ -188,3 +187,18 @@ margin: 0.3em 0 0 0 !important;
     right: 20px;
     border-radius: 3px;
 }
+
+.metaPanel{
+    display:none;
+}
+
+@media only screen and (min-width:0px) and (max-width: 700px){
+    .metaPanel{
+        display: none;
+   }
+  }
+  @media only screen and (min-width: 1025px)  {
+    .metaPanel{
+        display: none;
+   }
+  }  

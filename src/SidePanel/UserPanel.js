@@ -5,16 +5,16 @@ import AvatarEditor from "react-avatar-editor";
 
 const UsersPanel = (props) => {
 
-    const [userState, setUserState] = useState(props.currentUser);
+    const [userState] = useState(props.currentUser);
     const [isModalOpen, setModal] = useState(false)
     const [previewImage, setPreviewImage] = useState('');
     const [croppedImage, setCroppedImage] = useState('');
     const [blob, setBlob] = useState(null)
     const [avatarEditor, setAvatarEditor] = useState('')
-    const [imageUserRef, serImageUserRef] = useState(firebase.storage().ref())
-    const [userRef, setUserRef] = useState(firebase.auth().currentUser)
-    const [usersRef, setUsersRef] = useState(firebase.database().ref('users'))
-    const [metadata, setMetadata] = useState({ contentType: 'image/jpeg' })
+    const [imageUserRef] = useState(firebase.storage().ref())
+    const [userRef] = useState(firebase.auth().currentUser)
+    const [usersRef] = useState(firebase.database().ref('users'))
+    const [metadata] = useState({ contentType: 'image/jpeg' })
     const [uploadedCroppedImage, setUploadedCroppedImage] = useState('')
 
     const openModal = () => setModal(true);
@@ -49,7 +49,7 @@ const UsersPanel = (props) => {
 
     const uploadImage = () => {
         imageUserRef
-            .child(`avatar/user-${userRef.uid}`)
+            .child(`avatar/user/${userRef.uid}`)
             .put(blob, metadata)
             .then(snap => {
                 snap.ref.getDownloadURL().then(downloadURL => {

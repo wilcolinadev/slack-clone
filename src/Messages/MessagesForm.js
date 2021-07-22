@@ -12,14 +12,14 @@ const MessageForm = (props) => {
 
     const [message, setMessage] = useState('');
     const [Isloading, setIsLoading] = useState(false);
-    const [channel, setChannel] = useState(props.currentChannel);
-    const [user, seUser] = useState(props.currentUser);
+    const [channel] = useState(props.currentChannel);
+    const [user] = useState(props.currentUser);
     const [errors, setErrors] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [IsUpload, setIsUpload] = useState("");
     const [IsUploadTask, setIsUploadTask] = useState(null);
-    const [storageRef, setStorageRef] = useState(firebase.storage().ref())
-    const [typingRef, setTypingRef] = useState(firebase.database().ref('typing'))
+    const [storageRef] = useState(firebase.storage().ref())
+    const [typingRef] = useState(firebase.database().ref('typing'))
     const [percentUpLoaded, setPercentUploaded] = useState(0);
     const [emojiPicker, setEmojiPicker] = useState(false)
 
@@ -112,7 +112,7 @@ const MessageForm = (props) => {
 
     const getPath = () => {
         if (props.IsPrivateChannel) {
-            return `chat/private/-${channel.id}`;
+            return `chat/private/${channel.id}`;
         } else {
             return 'chat/public'
         }

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Segment, Accordion, Header, Icon, Image, List } from "semantic-ui-react";
+import { Segment, Accordion, Header, Icon, Image } from "semantic-ui-react";
+import "../components/App.css"
 const MetaPanel = (props) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
-    const [privateChannel, setPrivateChannel] = useState(props.isPrivateChannel)
-    const [channel, setCurrentChannel] = useState(props.currentChannel);
-    const [user, setCurrentUser] = useState(props.currentUser);
-    const [userPosts, setUserPosts] = useState(props.userPosts);
+    const [privateChannel] = useState(props.isPrivateChannel)
+    const [channel] = useState(props.currentChannel);
+
     const defineActiveIndex = (event, tittleProps) => {
         const { index } = tittleProps;
         const newActiveIndex = activeIndex;
@@ -21,7 +21,7 @@ const MetaPanel = (props) => {
 
     if (privateChannel) return null
     return (
-        <Segment loading={!channel}>
+        <Segment loading={!channel} >
             <Header as={"h3"} attached={"top"}>
                 {channel && channel.name}
             </Header>

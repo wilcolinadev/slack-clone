@@ -35,7 +35,10 @@ class Messages extends React.Component {
         if (channel && user) {
             this.addListeners(channel.id);
             this.addUserStartsListeners(channel.id, user.uid);
+            this.setState({ messagesLoading: false })
         }
+
+
     }
 
     componentWillUnmount() {
@@ -247,9 +250,10 @@ class Messages extends React.Component {
                     <Skeleton key={i} />
                 ))}
             </React.Fragment >
-        ) : null
-    )
 
+        ) : null
+
+    )
 
 
     render() {

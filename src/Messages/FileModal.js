@@ -4,20 +4,20 @@ import mime from "mime-types";
 const FileModal = ({ modal, closeModal, uploadFile }) => {
 
     const [file, setFile] = useState(null);
-    const [IsAuthorized, setIsAuthorized] = useState(['image/jpeg','image/png']);
+    const [IsAuthorized] = useState(['image/jpeg', 'image/png']);
 
     const addFile = event => {
         const file = event.target.files[0];
-         if (file){
-             setFile(file);
-         }
+        if (file) {
+            setFile(file);
+        }
     }
-    
-    const sendFile = ()=>{
-        if(file !== null){
-            if(isFileValid(file.name)){
 
-                const metadata = {contentType: mime.lookup(file.name)}
+    const sendFile = () => {
+        if (file !== null) {
+            if (isFileValid(file.name)) {
+
+                const metadata = { contentType: mime.lookup(file.name) }
                 uploadFile(file, metadata);
                 closeModal();
                 setFile(null);
@@ -25,7 +25,7 @@ const FileModal = ({ modal, closeModal, uploadFile }) => {
         }
     }
 
-    const isFileValid =(fileName)=>IsAuthorized.includes(mime.lookup(fileName))
+    const isFileValid = (fileName) => IsAuthorized.includes(mime.lookup(fileName))
     return (
         <Modal basic open={modal} onClose={closeModal}>
             <Modal.Header>
@@ -49,14 +49,14 @@ const FileModal = ({ modal, closeModal, uploadFile }) => {
                     inverted
                 >
                     <Icon name="checkmark" />    Send
-                    </Button>
+                </Button>
                 <Button
                     color={"red"}
                     inverted
                     onClick={closeModal}
                 >
                     <Icon name="remove" />     Cancel
-                    </Button>
+                </Button>
             </Modal.Actions>
         </Modal>
     )
