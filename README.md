@@ -24,8 +24,8 @@ The option to upload images
 
 Notifications and more! 👊 
 
-As usual with react, run the app in the development mode. using ### `npm start` and take a look at it.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Link for the Project ->
+Open (https://shimmering-gaufre-6ec0b9.netlify.app/login) 
 
 
 
