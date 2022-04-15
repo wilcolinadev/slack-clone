@@ -25,7 +25,7 @@ The option to upload images
 Notifications and more! 👊 
 
 ## Link for the Project ->
-Open (https://shimmering-gaufre-6ec0b9.netlify.app) 
+[DevChat](https://shimmering-gaufre-6ec0b9.netlify.app)
 
 
 
